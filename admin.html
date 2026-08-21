@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>나의 취향 - 관리자</title>
+<link rel="stylesheet" href="admin_style.css?v=20260821">
+</head>
+<body>
+<header class="page-header">
+    <h1>나의 취향 관리자</h1>
+</header>
+<main>
+    <section class="form-section">
+        <h2>소분류 추가/수정</h2>
+        <form id="listForm">
+            <input type="hidden" id="listFormId">
+            <label>대분류
+                <input type="text" id="listFormCategory" list="categoryOptions" required>
+                <datalist id="categoryOptions"></datalist>
+            </label>
+            <label>소분류명
+                <input type="text" id="listFormName" required>
+            </label>
+            <label>표시순서
+                <input type="number" id="listFormOrder" value="0">
+            </label>
+            <div class="form-actions">
+                <button type="submit">저장</button>
+                <button type="button" id="listFormCancel" style="display:none;">취소</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="form-section">
+        <h2>항목 추가/수정</h2>
+        <form id="itemForm">
+            <input type="hidden" id="itemFormId">
+            <label>소속 소분류
+                <select id="itemFormListSelect" required></select>
+            </label>
+            <label>제목
+                <input type="text" id="itemFormTitle" required>
+            </label>
+            <label>순위
+                <input type="number" id="itemFormRank" value="1">
+            </label>
+            <label>코멘트
+                <textarea id="itemFormComment"></textarea>
+            </label>
+            <label>이미지/링크 URL
+                <input type="url" id="itemFormMedia" placeholder="https://...">
+            </label>
+            <div class="form-actions">
+                <button type="submit">저장</button>
+                <button type="button" id="itemFormCancel" style="display:none;">취소</button>
+            </div>
+        </form>
+    </section>
+
+    <section>
+        <h2>전체 목록</h2>
+        <div id="listContainer"></div>
+    </section>
+
+    <div id="toast" class="toast"></div>
+</main>
+<script src="admin-utils.js?v=20260821"></script>
+<script src="admin.js?v=20260821"></script>
+</body>
+</html>
