@@ -1,11 +1,21 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const n8nBase = "https://primary-production-a6fa.up.railway.app";
     const API_GET_URL = `${n8nBase}/webhook/taste-get`;
+    const API_ITEM_SAVE_URL = `${n8nBase}/webhook/taste-item-save`;
 
     const loadingEl = document.getElementById('loading');
     const errorEl = document.getElementById('errorMessage');
     const emptyEl = document.getElementById('emptyState');
     const categoriesEl = document.getElementById('categories');
+    const toastEl = document.getElementById('toast');
+
+    let categoriesData = [];
+
+    function showToast(message, type = 'success') {
+        toastEl.textContent = message;
+        toastEl.className = `toast show ${type}`;
+        setTimeout(() => { toastEl.className = 'toast'; }, 3000);
+    }
 
     function fetchWithTimeout(url, options = {}, timeoutMs = 25000) {
         const controller = new AbortController();
@@ -33,6 +43,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         return '';
     }
 
+    function findListById(listId) {
+        for (const category of categoriesData) {
+            const found = category.소분류목록.find(l => l.id === listId);
+            if (found) return found;
+        }
+        return null;
+    }
+
     function renderItemMedia(item) {
         const url = item['이미지/링크'];
         const type = window.TasteUtils.detectMediaType(url);
@@ -58,7 +76,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const hasDetail = Boolean(item.코멘트) || Boolean(media);
         const rankCls = rankClass(item.순위);
         return `
-            <li class="item-card${rankCls ? ' item-card--top' : ''}">
+            <li class="item-card${rankCls ? ' item-card--top' : ''}" data-id="${item.id}">
+                <span class="drag-handle" title="드래그해서 순서 변경">⠿</span>
                 <span class="item-rank${rankCls}">${escapeHtml(item.순위)}위</span>
                 <div class="item-body">
                     ${hasDetail
@@ -79,8 +98,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             : '<li class="item-empty">아직 등록된 항목이 없어요.</li>';
         return `
             <div class="list-card">
-                <h3 class="list-title">${escapeHtml(list.소분류명)}</h3>
-                <ol class="item-list">${items}</ol>
+                <div class="list-title-row">
+                    <h3 class="list-title">${escapeHtml(list.소분류명)}</h3>
+                    <button type="button" class="btn-quick-add" data-list-id="${list.id}">+ 추가</button>
+                </div>
+                <div class="quick-add-panel" data-list-id="${list.id}" hidden>
+                    <input type="text" class="quick-add-title" placeholder="제목을 입력하세요">
+                    <div class="quick-add-actions">
+                        <button type="button" class="quick-add-save" data-list-id="${list.id}">저장</button>
+                        <button type="button" class="quick-add-cancel">취소</button>
+                    </div>
+                </div>
+                <ol class="item-list" data-list-id="${list.id}">${items}</ol>
             </div>`;
     }
 
@@ -101,23 +130,155 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         emptyEl.style.display = 'none';
         categoriesEl.innerHTML = categories.map(renderCategory).join('');
+        categoriesEl.querySelectorAll('.item-list').forEach(ol => {
+            setupDragReorder(ol, ol.dataset.listId);
+        });
     }
 
-    // 제목을 탭하면 코멘트/이미지·링크가 펼쳐지는 아코디언 (이벤트 위임으로 한 번만 등록)
-    categoriesEl.addEventListener('click', (e) => {
-        const btn = e.target.closest('.item-title--expandable');
-        if (!btn) return;
-        const detail = btn.nextElementSibling;
-        if (!detail) return;
-        const isHidden = detail.hasAttribute('hidden');
-        if (isHidden) {
-            detail.removeAttribute('hidden');
-            btn.classList.add('item-title--open');
-            btn.setAttribute('aria-expanded', 'true');
-        } else {
-            detail.setAttribute('hidden', '');
-            btn.classList.remove('item-title--open');
-            btn.setAttribute('aria-expanded', 'false');
+    // 항목을 손가락(또는 마우스)으로 드래그해서 순서를 바꾸는 기능.
+    // 드래그가 끝나면 그 소분류 안의 항목 순위를 1..N으로 다시 매겨서 바뀐 것만 저장한다.
+    function setupDragReorder(olEl, listId) {
+        olEl.querySelectorAll('.item-card').forEach(row => {
+            const handle = row.querySelector('.drag-handle');
+            if (!handle) return;
+
+            handle.addEventListener('pointerdown', (e) => {
+                e.preventDefault();
+                const dragEl = row;
+                dragEl.classList.add('dragging');
+                try { handle.setPointerCapture(e.pointerId); } catch (err) { /* 일부 브라우저는 미지원 */ }
+
+                const onMove = (ev) => {
+                    ev.preventDefault();
+                    const rows = [...olEl.querySelectorAll('.item-card:not(.dragging)')];
+                    const y = ev.clientY;
+                    const next = rows.find(r => {
+                        const rect = r.getBoundingClientRect();
+                        return y < rect.top + rect.height / 2;
+                    });
+                    if (next) {
+                        olEl.insertBefore(dragEl, next);
+                    } else {
+                        olEl.appendChild(dragEl);
+                    }
+                };
+
+                const onUp = async (ev) => {
+                    dragEl.classList.remove('dragging');
+                    try { handle.releasePointerCapture(ev.pointerId); } catch (err) { /* noop */ }
+                    document.removeEventListener('pointermove', onMove);
+                    document.removeEventListener('pointerup', onUp);
+                    await persistNewOrder(olEl, listId);
+                };
+
+                document.addEventListener('pointermove', onMove, { passive: false });
+                document.addEventListener('pointerup', onUp);
+            });
+        });
+    }
+
+    async function persistNewOrder(olEl, listId) {
+        const list = findListById(listId);
+        if (!list) return;
+        const rows = [...olEl.querySelectorAll('.item-card')];
+        const updates = [];
+        rows.forEach((row, idx) => {
+            const itemId = row.dataset.id;
+            const item = list.항목.find(i => i.id === itemId);
+            const newRank = idx + 1;
+            if (item && item.순위 !== newRank) {
+                updates.push({ ...item, 순위: newRank });
+            }
+        });
+        if (updates.length === 0) return;
+        try {
+            for (const item of updates) {
+                const payload = window.AdminUtils.buildItemPayload({
+                    제목: item.제목,
+                    순위: item.순위,
+                    코멘트: item.코멘트,
+                    '이미지/링크': item['이미지/링크'],
+                    소속목록: listId
+                }, item.id);
+                const response = await fetchWithTimeout(API_ITEM_SAVE_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) throw new Error('순위 저장 실패');
+            }
+            showToast('순위가 변경되었습니다.');
+            await load();
+        } catch (err) {
+            showToast(err.message || '순위 저장 중 오류가 발생했습니다.', 'danger');
+            await load();
+        }
+    }
+
+    // 제목을 탭하면 코멘트/이미지·링크가 펼쳐지는 아코디언, 소분류별 빠른 추가 — 이벤트 위임으로 한 번만 등록
+    categoriesEl.addEventListener('click', async (e) => {
+        const expandBtn = e.target.closest('.item-title--expandable');
+        if (expandBtn) {
+            const detail = expandBtn.nextElementSibling;
+            if (!detail) return;
+            const isHidden = detail.hasAttribute('hidden');
+            if (isHidden) {
+                detail.removeAttribute('hidden');
+                expandBtn.classList.add('item-title--open');
+                expandBtn.setAttribute('aria-expanded', 'true');
+            } else {
+                detail.setAttribute('hidden', '');
+                expandBtn.classList.remove('item-title--open');
+                expandBtn.setAttribute('aria-expanded', 'false');
+            }
+            return;
+        }
+
+        const quickAddBtn = e.target.closest('.btn-quick-add');
+        if (quickAddBtn) {
+            const panel = categoriesEl.querySelector(`.quick-add-panel[data-list-id="${quickAddBtn.dataset.listId}"]`);
+            if (!panel) return;
+            panel.hidden = !panel.hidden;
+            if (!panel.hidden) panel.querySelector('.quick-add-title').focus();
+            return;
+        }
+
+        const cancelBtn = e.target.closest('.quick-add-cancel');
+        if (cancelBtn) {
+            const panel = cancelBtn.closest('.quick-add-panel');
+            panel.hidden = true;
+            panel.querySelector('.quick-add-title').value = '';
+            return;
+        }
+
+        const saveBtn = e.target.closest('.quick-add-save');
+        if (saveBtn) {
+            const panel = saveBtn.closest('.quick-add-panel');
+            const input = panel.querySelector('.quick-add-title');
+            const title = input.value.trim();
+            if (!title) { input.focus(); return; }
+            const listId = saveBtn.dataset.listId;
+            const list = findListById(listId);
+            const nextRank = (list && list.항목 ? list.항목.length : 0) + 1;
+            const payload = window.AdminUtils.buildItemPayload(
+                { 제목: title, 순위: nextRank, 코멘트: '', '이미지/링크': '', 소속목록: listId },
+                null
+            );
+            saveBtn.disabled = true;
+            try {
+                const response = await fetchWithTimeout(API_ITEM_SAVE_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) throw new Error('저장 실패');
+                showToast('항목이 추가되었습니다.');
+                await load();
+            } catch (err) {
+                showToast(err.message || '저장 중 오류가 발생했습니다.', 'danger');
+            } finally {
+                saveBtn.disabled = false;
+            }
         }
     });
 
@@ -129,7 +290,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!response.ok) throw new Error('서버 연동 실패');
             const result = await response.json();
             const data = Array.isArray(result) ? result[0] : result;
-            render(data && data.categories ? data.categories : []);
+            categoriesData = (data && data.categories) ? data.categories : [];
+            render(categoriesData);
         } catch (error) {
             console.error(error);
             errorEl.textContent = error.message || '데이터를 불러오는 도중 오류가 발생했습니다.';
