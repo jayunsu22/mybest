@@ -276,7 +276,7 @@ Expected: 두 호출 모두 삭제된 레코드 `id`를 포함한 성공 응답.
 - Produces: `window.TasteUtils = { extractYoutubeId(url), detectMediaType(url), getYoutubeThumbnail(url) }` — Task 4(`app.js`)가 사용.
 - Produces: `window.AdminUtils = { validateListForm(form), buildListPayload(form, existingId), validateItemForm(form), buildItemPayload(form, existingId), buildDeletePlan(list) }` — Task 5(`admin.js`)가 사용. `list`는 Task 2 GET 응답의 소분류 객체 `{ id, 소분류명, 표시순서, 항목: [{id, ...}] }` 형태.
 
-- [ ] **Step 1: `taste-utils.js` 실패하는 테스트 작성**
+- [x] **Step 1: `taste-utils.js` 실패하는 테스트 작성**
 
 `tests/taste-utils.test.js`:
 
@@ -322,12 +322,12 @@ test('getYoutubeThumbnail builds the thumbnail url, null for non-youtube', () =>
 });
 ```
 
-- [ ] **Step 2: 테스트가 실패하는지 확인 (모듈이 아직 없음)**
+- [x] **Step 2: 테스트가 실패하는지 확인 (모듈이 아직 없음)**
 
 Run: `node --test tests/taste-utils.test.js`
 Expected: FAIL — `Cannot find module '../taste-utils.js'`
 
-- [ ] **Step 3: `taste-utils.js` 구현**
+- [x] **Step 3: `taste-utils.js` 구현**
 
 ```javascript
 (function (root, factory) {
@@ -367,12 +367,12 @@ Expected: FAIL — `Cannot find module '../taste-utils.js'`
 });
 ```
 
-- [ ] **Step 4: 테스트 통과 확인**
+- [x] **Step 4: 테스트 통과 확인**
 
 Run: `node --test tests/taste-utils.test.js`
 Expected: PASS — `# pass 6`, `# fail 0`
 
-- [ ] **Step 5: `admin-utils.js` 실패하는 테스트 작성**
+- [x] **Step 5: `admin-utils.js` 실패하는 테스트 작성**
 
 `tests/admin-utils.test.js`:
 
@@ -451,12 +451,12 @@ test('buildDeletePlan handles a list with no items', () => {
 });
 ```
 
-- [ ] **Step 6: 테스트가 실패하는지 확인**
+- [x] **Step 6: 테스트가 실패하는지 확인**
 
 Run: `node --test tests/admin-utils.test.js`
 Expected: FAIL — `Cannot find module '../admin-utils.js'`
 
-- [ ] **Step 7: `admin-utils.js` 구현**
+- [x] **Step 7: `admin-utils.js` 구현**
 
 ```javascript
 (function (root, factory) {
@@ -515,12 +515,12 @@ Expected: FAIL — `Cannot find module '../admin-utils.js'`
 });
 ```
 
-- [ ] **Step 8: 전체 테스트 통과 확인**
+- [x] **Step 8: 전체 테스트 통과 확인**
 
 Run: `node --test tests/`
 Expected: PASS — `# pass 15`, `# fail 0` (taste-utils 6개 + admin-utils 9개)
 
-- [ ] **Step 9: 커밋**
+- [x] **Step 9: 커밋**
 
 ```bash
 git add taste-utils.js admin-utils.js tests/taste-utils.test.js tests/admin-utils.test.js
@@ -540,7 +540,7 @@ git commit -m "feat: 나의 취향 공유 유틸 모듈 (TasteUtils, AdminUtils)
 **Interfaces:**
 - Consumes: `window.TasteUtils`(Task 3), `GET {n8nBase}/webhook/taste-get`(Task 2)의 `{ categories: [...] }` 응답
 
-- [ ] **Step 1: `style.css` 작성**
+- [x] **Step 1: `style.css` 작성**
 
 ```css
 :root {
@@ -603,7 +603,7 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 }
 ```
 
-- [ ] **Step 2: `app.js` 작성**
+- [x] **Step 2: `app.js` 작성**
 
 ```javascript
 document.addEventListener('DOMContentLoaded', async () => {
@@ -718,7 +718,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 ```
 
-- [ ] **Step 3: `index.html` 작성**
+- [x] **Step 3: `index.html` 작성**
 
 ```html
 <!DOCTYPE html>
@@ -747,7 +747,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 </html>
 ```
 
-- [ ] **Step 4: 로컬 정적 서버로 브라우저 확인**
+- [x] **Step 4: 로컬 정적 서버로 브라우저 확인**
 
 정적 서버 스크립트를 파일로 만들고(재사용을 위해 Task 5에서도 그대로 씀):
 
@@ -776,7 +776,7 @@ Expected: Task 1에서 시딩한 "음악 > 여름노래 BEST5 > 예시 항목" �
 
 확인 후 백그라운드로 실행한 `node serve-static.js` 프로세스를 종료한다.
 
-- [ ] **Step 5: 커밋**
+- [x] **Step 5: 커밋**
 
 ```bash
 git add index.html app.js style.css
@@ -795,7 +795,7 @@ git commit -m "feat: 나의 취향 공개 조회 페이지"
 **Interfaces:**
 - Consumes: `window.AdminUtils`(Task 3), Task 2의 4개 웹훅 전부
 
-- [ ] **Step 1: `admin_style.css` 작성**
+- [x] **Step 1: `admin_style.css` 작성**
 
 ```css
 :root {
@@ -858,7 +858,7 @@ form textarea { min-height: 60px; resize: vertical; }
 .empty-state { color: var(--text-muted); font-size: 0.9rem; }
 ```
 
-- [ ] **Step 2: `admin.js` 작성**
+- [x] **Step 2: `admin.js` 작성**
 
 ```javascript
 document.addEventListener('DOMContentLoaded', async () => {
@@ -1126,7 +1126,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 ```
 
-- [ ] **Step 3: `admin.html` 작성**
+- [x] **Step 3: `admin.html` 작성**
 
 ```html
 <!DOCTYPE html>
@@ -1203,7 +1203,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 </html>
 ```
 
-- [ ] **Step 4: 로컬 서버로 브라우저 확인**
+- [x] **Step 4: 로컬 서버로 브라우저 확인**
 
 Task 4에서 만든 `serve-static.js`를 Bash 도구의 `run_in_background: true`로 다시 실행하고 `http://localhost:8080/admin.html`을 연다.
 
@@ -1211,7 +1211,7 @@ Expected: 소분류 폼/항목 폼과 Task 1 예시 데이터가 목록에 보�
 
 확인 후 서버 프로세스를 종료한다.
 
-- [ ] **Step 5: 커밋**
+- [x] **Step 5: 커밋**
 
 ```bash
 git add admin.html admin.js admin_style.css
@@ -1228,7 +1228,7 @@ git commit -m "feat: 나의 취향 관리자 페이지"
 **Interfaces:**
 - Consumes: 사용자가 github.com에서 만든 빈 저장소 `my-taste`의 URL
 
-- [ ] **Step 1: `.gitignore` 작성**
+- [x] **Step 1: `.gitignore` 작성**
 
 ```
 node_modules/
@@ -1236,18 +1236,18 @@ node_modules/
 .DS_Store
 ```
 
-- [ ] **Step 2: 커밋**
+- [x] **Step 2: 커밋**
 
 ```bash
 git add .gitignore
 git commit -m "chore: gitignore 추가"
 ```
 
-- [ ] **Step 3: 사용자에게 빈 GitHub 저장소 생성 요청**
+- [x] **Step 3: 사용자에게 빈 GitHub 저장소 생성 요청**
 
 사용자에게 안내: https://github.com/new 에서 저장소 이름 `my-taste`(Public), README/gitignore/license 없이 빈 저장소로 생성 → 생성된 저장소의 URL(예: `https://github.com/<username>/my-taste.git`)을 알려달라고 요청.
 
-- [ ] **Step 4: 원격 저장소 연결 (사용자가 URL을 준 뒤)**
+- [x] **Step 4: 원격 저장소 연결 (사용자가 URL을 준 뒤)**
 
 ```bash
 git branch -M main
@@ -1257,7 +1257,7 @@ git remote -v
 
 Expected: `origin`이 방금 알려준 URL로 fetch/push 모두 등록되어 출력됨.
 
-- [ ] **Step 5: Push — 반드시 사용자 확인 후 실행**
+- [x] **Step 5: Push — 반드시 사용자 확인 후 실행**
 
 공개 저장소에 push하는 것은 "공개 콘텐츠 게시"에 해당하므로, 아래 명령을 실행하기 전에 반드시 채팅으로 "지금까지 만든 파일을 `my-taste` 저장소로 push해도 될까요?"라고 확인받는다.
 
@@ -1267,11 +1267,11 @@ git push -u origin main
 
 Expected: `main -> main` 브랜치가 원격에 생성되었다는 출력.
 
-- [ ] **Step 6: GitHub Pages 활성화 (사용자 수동 작업)**
+- [x] **Step 6: GitHub Pages 활성화 (사용자 수동 작업)**
 
 사용자에게 안내: 저장소의 Settings → Pages → Source를 "Deploy from a branch"로, Branch를 "main" / "/(root)"로 설정 후 Save. 1~2분 후 `https://<username>.github.io/my-taste/`에서 서비스된다.
 
-- [ ] **Step 7: 배포 확인**
+- [x] **Step 7: 배포 확인**
 
 ```bash
 curl -s -o /dev/null -w "%{http_code}\n" "https://<username>.github.io/my-taste/index.html"
