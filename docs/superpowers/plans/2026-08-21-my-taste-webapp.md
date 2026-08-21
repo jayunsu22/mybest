@@ -31,7 +31,7 @@
 **Interfaces:**
 - Produces: `docs/superpowers/plans/airtable-ids.json`에 `{ "baseId": "appXXXXXXXXXXXXXXX", "listTableId": "tblXXXXXXXXXXXXXXX", "itemTableId": "tblXXXXXXXXXXXXXXX", "workspaceId": "wspM4cjxuM52BmpYX" }` 형태로 실제 ID 3종을 기록한다. Task 2가 이 파일을 읽어서 사용한다.
 
-- [ ] **Step 1: 베이스와 `취향목록` 테이블 생성**
+- [x] **Step 1: 베이스와 `취향목록` 테이블 생성**
 
 Airtable MCP 도구 `mcp__afe48573-6e9a-4239-8478-29244eb6d906__create_base`를 아래 파라미터로 호출한다.
 
@@ -65,7 +65,7 @@ Airtable MCP 도구 `mcp__afe48573-6e9a-4239-8478-29244eb6d906__create_base`를 
 
 응답에서 `id`(베이스 ID, `app`로 시작)와 `tables[0].id`(`취향목록` 테이블 ID, `tbl`로 시작)를 기록해 둔다.
 
-- [ ] **Step 2: `취향항목` 테이블 생성 (취향목록에 링크)**
+- [x] **Step 2: `취향항목` 테이블 생성 (취향목록에 링크)**
 
 `mcp__afe48573-6e9a-4239-8478-29244eb6d906__create_table`를 호출한다. `<BASE_ID>`와 `<LIST_TABLE_ID>`는 Step 1에서 얻은 값으로 채운다.
 
@@ -89,7 +89,7 @@ Airtable MCP 도구 `mcp__afe48573-6e9a-4239-8478-29244eb6d906__create_base`를 
 
 응답에서 `id`(취향항목 테이블 ID)를 기록해 둔다.
 
-- [ ] **Step 3: 스키마 검증**
+- [x] **Step 3: 스키마 검증**
 
 `mcp__afe48573-6e9a-4239-8478-29244eb6d906__list_tables_for_base`를 `{ "baseId": "<BASE_ID>" }`로 호출한다.
 
@@ -97,7 +97,7 @@ Expected: 응답 `tables` 배열에 `취향목록`(필드: 소분류명, 대분�
 
 이 응답에는 각 필드의 `id`(`fld`로 시작)도 들어있다. Step 4에서 레코드를 만들 때는 필드 **이름이 아니라 이 필드 ID**를 키로 써야 하므로, `취향목록`의 소분류명/대분류/표시순서와 `취향항목`의 제목/순위/코멘트/소속목록 필드 ID 7개를 여기서 받아 적어 둔다 (`create_records_for_table` 도구는 `fields`의 키로 필드 ID를 요구함 — 필드 이름을 쓰면 실패한다).
 
-- [ ] **Step 4: 예시 데이터 1건 시딩 (동작 확인 겸 시작 데이터)**
+- [x] **Step 4: 예시 데이터 1건 시딩 (동작 확인 겸 시작 데이터)**
 
 `mcp__afe48573-6e9a-4239-8478-29244eb6d906__create_records_for_table`로 `취향목록`에 예시 소분류를 만든다. `<LIST_소분류명_FLD>`/`<LIST_대분류_FLD>`/`<LIST_표시순서_FLD>`는 Step 3에서 받아 적은 필드 ID로 채운다.
 
@@ -140,7 +140,7 @@ Expected: 응답 `tables` 배열에 `취향목록`(필드: 소분류명, 대분�
 
 Expected: 두 호출 모두 생성된 레코드의 `id`를 포함한 성공 응답을 반환한다.
 
-- [ ] **Step 5: ID를 파일로 기록**
+- [x] **Step 5: ID를 파일로 기록**
 
 `docs/superpowers/plans/airtable-ids.json`을 아래 내용으로 작성한다 (Step 1/2에서 얻은 실제 값으로 채움).
 
@@ -153,7 +153,7 @@ Expected: 두 호출 모두 생성된 레코드의 `id`를 포함한 성공 응�
 }
 ```
 
-- [ ] **Step 6: 커밋**
+- [x] **Step 6: 커밋**
 
 ```bash
 git add docs/superpowers/plans/airtable-ids.json
@@ -177,7 +177,7 @@ git commit -m "chore: 나의취향 Airtable 베이스 ID 기록"
   - `POST {n8nBase}/webhook/taste-item-save` body `{ id?, 제목, 순위, 코멘트, "이미지/링크", 소속목록 }` (소속목록은 취향목록 레코드 id 문자열 1개)
   - `POST {n8nBase}/webhook/taste-delete` body `{ type: "list"|"item", id }`
 
-- [ ] **Step 1: 토큰을 실제 ID로 치환해 `n8n_workflow.json` 생성**
+- [x] **Step 1: 토큰을 실제 ID로 치환해 `n8n_workflow.json` 생성**
 
 ```bash
 node -e "
@@ -194,7 +194,7 @@ console.log('n8n_workflow.json written');
 
 Expected output: `n8n_workflow.json written`
 
-- [ ] **Step 2: JSON 유효성 + 토큰 잔존 여부 확인**
+- [x] **Step 2: JSON 유효성 + 토큰 잔존 여부 확인**
 
 ```bash
 node -e "
@@ -208,22 +208,22 @@ console.log('OK: valid JSON, no leftover tokens');
 
 Expected output: `OK: valid JSON, no leftover tokens`
 
-- [ ] **Step 3: 커밋**
+- [x] **Step 3: 커밋**
 
 ```bash
 git add n8n_workflow.template.json n8n_workflow.json
 git commit -m "feat: 나의 취향 N8N 워크플로우 작성"
 ```
 
-- [ ] **Step 4: Airtable PAT 스코프에 새 베이스 추가 (사용자 수동 작업)**
+- [x] **Step 4: Airtable PAT 스코프에 새 베이스 추가 (사용자 수동 작업)**
 
 사용자에게 안내: https://airtable.com/create/tokens 접속 → N8N이 쓰는 토큰(이름이 보통 "Airtable Personal Access Token account 2" 또는 그와 유사)을 열기 → "Access" 섹션에서 새로 만든 "나의취향" 베이스를 추가 → 저장. 이 단계를 건너뛰면 N8N의 Airtable 노드가 새 베이스에 접근하지 못해 모든 웹훅이 실패한다.
 
-- [ ] **Step 5: N8N에 워크플로우 임포트 (사용자 수동 작업)**
+- [x] **Step 5: N8N에 워크플로우 임포트 (사용자 수동 작업)**
 
 사용자에게 안내: 레일웨이의 N8N 에디터(`https://primary-production-a6fa.up.railway.app`) 접속 → 새 워크플로우 생성 → 우측 상단 메뉴 "Import from File" → 이 프로젝트의 `n8n_workflow.json` 선택 → 각 Airtable 노드가 자격증명 "Airtable Personal Access Token account 2"를 자동으로 물고 있는지 확인 (id가 일치하므로 보통 자동 연결됨. 안 되어 있으면 노드마다 수동으로 같은 자격증명 선택) → 워크플로우 우측 상단 토글로 **Activate**.
 
-- [ ] **Step 6: 웹훅 4개 curl로 검증**
+- [x] **Step 6: 웹훅 4개 curl로 검증**
 
 아래 `N8N_BASE`는 그대로 사용한다. Step 5에서 워크플로우를 활성화한 뒤 실행한다.
 
