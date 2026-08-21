@@ -11,7 +11,10 @@
       "name": "1. GET 취향목록 조회 Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
-      "position": [0, 0],
+      "position": [
+        0,
+        0
+      ],
       "webhookId": "15716408-280d-444e-81c1-4823df4aea62"
     },
     {
@@ -36,8 +39,11 @@
       "id": "3833ead3-2b93-4bb1-bf98-18c28e0ff148",
       "name": "Airtable 취향목록 전체 조회",
       "type": "n8n-nodes-base.airtable",
-      "typeVersion": 2,
-      "position": [220, -80],
+      "typeVersion": 2.2,
+      "position": [
+        220,
+        -80
+      ],
       "credentials": {
         "airtableTokenApi": {
           "id": "J5wefJCMalpjjm3Q",
@@ -67,8 +73,11 @@
       "id": "f6acc607-5764-4415-b37b-16165616cc71",
       "name": "Airtable 취향항목 전체 조회",
       "type": "n8n-nodes-base.airtable",
-      "typeVersion": 2,
-      "position": [220, 80],
+      "typeVersion": 2.2,
+      "position": [
+        220,
+        80
+      ],
       "credentials": {
         "airtableTokenApi": {
           "id": "J5wefJCMalpjjm3Q",
@@ -85,7 +94,10 @@
       "name": "Merge (취향 데이터 병합)",
       "type": "n8n-nodes-base.merge",
       "typeVersion": 2,
-      "position": [440, 0]
+      "position": [
+        440,
+        0
+      ]
     },
     {
       "parameters": {
@@ -95,7 +107,10 @@
       "name": "취향 데이터 그룹핑",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [660, 0]
+      "position": [
+        660,
+        0
+      ]
     },
     {
       "parameters": {
@@ -106,20 +121,28 @@
       "name": "Respond (조회)",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
-      "position": [880, 0]
+      "position": [
+        880,
+        0
+      ]
     },
     {
       "parameters": {
         "httpMethod": "POST",
         "path": "taste-list-save",
         "responseMode": "responseNode",
-        "options": { "allowedOrigins": "*" }
+        "options": {
+          "allowedOrigins": "*"
+        }
       },
       "id": "5735feb8-09c9-4b35-896e-4e1a87d39ed8",
       "name": "2. POST 소분류 저장 Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
-      "position": [0, 300],
+      "position": [
+        0,
+        300
+      ],
       "webhookId": "f1a9a641-7005-486c-b483-682d4446959a"
     },
     {
@@ -130,17 +153,28 @@
       "name": "소분류 저장 데이터 가공",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [220, 300]
+      "position": [
+        220,
+        300
+      ]
     },
     {
       "parameters": {
         "conditions": {
-          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 1 },
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
           "conditions": [
             {
               "leftValue": "={{ $json.id ? 'update' : 'create' }}",
               "rightValue": "update",
-              "operator": { "type": "string", "operation": "equals" }
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
             }
           ],
           "combinator": "and"
@@ -151,7 +185,10 @@
       "name": "소분류 신규/갱신 분기",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [440, 300]
+      "position": [
+        440,
+        300
+      ]
     },
     {
       "parameters": {
@@ -173,7 +210,9 @@
         "columns": {
           "mappingMode": "autoMapInputData",
           "value": {},
-          "matchingColumns": ["id"],
+          "matchingColumns": [
+            "id"
+          ],
           "schema": []
         },
         "options": {}
@@ -181,8 +220,11 @@
       "id": "1da2f530-12e2-49b0-a3e6-8b91cde62069",
       "name": "소분류 수정",
       "type": "n8n-nodes-base.airtable",
-      "typeVersion": 2,
-      "position": [660, 250],
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        250
+      ],
       "credentials": {
         "airtableTokenApi": {
           "id": "J5wefJCMalpjjm3Q",
@@ -218,8 +260,11 @@
       "id": "97f3e371-aed3-4bad-bfdc-17d53abaece1",
       "name": "소분류 생성",
       "type": "n8n-nodes-base.airtable",
-      "typeVersion": 2,
-      "position": [660, 350],
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        350
+      ],
       "credentials": {
         "airtableTokenApi": {
           "id": "J5wefJCMalpjjm3Q",
@@ -236,20 +281,28 @@
       "name": "Respond (소분류저장)",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
-      "position": [880, 300]
+      "position": [
+        880,
+        300
+      ]
     },
     {
       "parameters": {
         "httpMethod": "POST",
         "path": "taste-item-save",
         "responseMode": "responseNode",
-        "options": { "allowedOrigins": "*" }
+        "options": {
+          "allowedOrigins": "*"
+        }
       },
       "id": "9a627ce1-22a7-41d8-8c1e-b42141591dbc",
       "name": "3. POST 항목 저장 Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
-      "position": [0, 600],
+      "position": [
+        0,
+        600
+      ],
       "webhookId": "de7251c4-0b99-4cfa-9187-4ad1b7e709e7"
     },
     {
@@ -260,17 +313,28 @@
       "name": "항목 저장 데이터 가공",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [220, 600]
+      "position": [
+        220,
+        600
+      ]
     },
     {
       "parameters": {
         "conditions": {
-          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 1 },
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
           "conditions": [
             {
               "leftValue": "={{ $json.id ? 'update' : 'create' }}",
               "rightValue": "update",
-              "operator": { "type": "string", "operation": "equals" }
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
             }
           ],
           "combinator": "and"
@@ -281,7 +345,10 @@
       "name": "항목 신규/갱신 분기",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [440, 600]
+      "position": [
+        440,
+        600
+      ]
     },
     {
       "parameters": {
@@ -303,7 +370,9 @@
         "columns": {
           "mappingMode": "autoMapInputData",
           "value": {},
-          "matchingColumns": ["id"],
+          "matchingColumns": [
+            "id"
+          ],
           "schema": []
         },
         "options": {}
@@ -311,8 +380,11 @@
       "id": "4000f9a8-2ec7-4aeb-802a-07f51e65847b",
       "name": "항목 수정",
       "type": "n8n-nodes-base.airtable",
-      "typeVersion": 2,
-      "position": [660, 550],
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        550
+      ],
       "credentials": {
         "airtableTokenApi": {
           "id": "J5wefJCMalpjjm3Q",
@@ -348,8 +420,11 @@
       "id": "7e427203-955c-4ff1-9577-570c5ad5356a",
       "name": "항목 생성",
       "type": "n8n-nodes-base.airtable",
-      "typeVersion": 2,
-      "position": [660, 650],
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        650
+      ],
       "credentials": {
         "airtableTokenApi": {
           "id": "J5wefJCMalpjjm3Q",
@@ -366,31 +441,47 @@
       "name": "Respond (항목저장)",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
-      "position": [880, 600]
+      "position": [
+        880,
+        600
+      ]
     },
     {
       "parameters": {
         "httpMethod": "POST",
         "path": "taste-delete",
         "responseMode": "responseNode",
-        "options": { "allowedOrigins": "*" }
+        "options": {
+          "allowedOrigins": "*"
+        }
       },
       "id": "73c63a84-ab13-4c30-9bf8-b4bc77791bf5",
       "name": "4. POST 삭제 Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
-      "position": [0, 900],
+      "position": [
+        0,
+        900
+      ],
       "webhookId": "b5ede7fe-8e1b-4a56-ac12-47d460bf8770"
     },
     {
       "parameters": {
         "conditions": {
-          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 1 },
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
           "conditions": [
             {
               "leftValue": "={{ $json.body.type }}",
               "rightValue": "list",
-              "operator": { "type": "string", "operation": "equals" }
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
             }
           ],
           "combinator": "and"
@@ -401,7 +492,10 @@
       "name": "삭제 대상 분기",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [220, 900]
+      "position": [
+        220,
+        900
+      ]
     },
     {
       "parameters": {
@@ -426,8 +520,11 @@
       "id": "67bd2dad-8f9b-41a2-b02e-d09068916ccb",
       "name": "소분류 삭제",
       "type": "n8n-nodes-base.airtable",
-      "typeVersion": 2,
-      "position": [440, 850],
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        850
+      ],
       "credentials": {
         "airtableTokenApi": {
           "id": "J5wefJCMalpjjm3Q",
@@ -458,8 +555,11 @@
       "id": "585cd5c3-b683-46e3-b1b7-50a8741656f7",
       "name": "항목 삭제",
       "type": "n8n-nodes-base.airtable",
-      "typeVersion": 2,
-      "position": [440, 950],
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        950
+      ],
       "credentials": {
         "airtableTokenApi": {
           "id": "J5wefJCMalpjjm3Q",
@@ -476,78 +576,247 @@
       "name": "Respond (삭제)",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
-      "position": [660, 900]
+      "position": [
+        660,
+        900
+      ]
     }
   ],
   "connections": {
     "1. GET 취향목록 조회 Webhook": {
-      "main": [[
-        { "node": "Airtable 취향목록 전체 조회", "type": "main", "index": 0 },
-        { "node": "Airtable 취향항목 전체 조회", "type": "main", "index": 0 }
-      ]]
+      "main": [
+        [
+          {
+            "node": "Airtable 취향목록 전체 조회",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Airtable 취향항목 전체 조회",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Airtable 취향목록 전체 조회": {
-      "main": [[{ "node": "Merge (취향 데이터 병합)", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Merge (취향 데이터 병합)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Airtable 취향항목 전체 조회": {
-      "main": [[{ "node": "Merge (취향 데이터 병합)", "type": "main", "index": 1 }]]
+      "main": [
+        [
+          {
+            "node": "Merge (취향 데이터 병합)",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
     },
     "Merge (취향 데이터 병합)": {
-      "main": [[{ "node": "취향 데이터 그룹핑", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "취향 데이터 그룹핑",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "취향 데이터 그룹핑": {
-      "main": [[{ "node": "Respond (조회)", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Respond (조회)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "2. POST 소분류 저장 Webhook": {
-      "main": [[{ "node": "소분류 저장 데이터 가공", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "소분류 저장 데이터 가공",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "소분류 저장 데이터 가공": {
-      "main": [[{ "node": "소분류 신규/갱신 분기", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "소분류 신규/갱신 분기",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "소분류 신규/갱신 분기": {
       "main": [
-        [{ "node": "소분류 수정", "type": "main", "index": 0 }],
-        [{ "node": "소분류 생성", "type": "main", "index": 0 }]
+        [
+          {
+            "node": "소분류 수정",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "소분류 생성",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "소분류 수정": {
-      "main": [[{ "node": "Respond (소분류저장)", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Respond (소분류저장)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "소분류 생성": {
-      "main": [[{ "node": "Respond (소분류저장)", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Respond (소분류저장)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "3. POST 항목 저장 Webhook": {
-      "main": [[{ "node": "항목 저장 데이터 가공", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "항목 저장 데이터 가공",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "항목 저장 데이터 가공": {
-      "main": [[{ "node": "항목 신규/갱신 분기", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "항목 신규/갱신 분기",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "항목 신규/갱신 분기": {
       "main": [
-        [{ "node": "항목 수정", "type": "main", "index": 0 }],
-        [{ "node": "항목 생성", "type": "main", "index": 0 }]
+        [
+          {
+            "node": "항목 수정",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "항목 생성",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "항목 수정": {
-      "main": [[{ "node": "Respond (항목저장)", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Respond (항목저장)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "항목 생성": {
-      "main": [[{ "node": "Respond (항목저장)", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Respond (항목저장)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "4. POST 삭제 Webhook": {
-      "main": [[{ "node": "삭제 대상 분기", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "삭제 대상 분기",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "삭제 대상 분기": {
       "main": [
-        [{ "node": "소분류 삭제", "type": "main", "index": 0 }],
-        [{ "node": "항목 삭제", "type": "main", "index": 0 }]
+        [
+          {
+            "node": "소분류 삭제",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "항목 삭제",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "소분류 삭제": {
-      "main": [[{ "node": "Respond (삭제)", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Respond (삭제)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "항목 삭제": {
-      "main": [[{ "node": "Respond (삭제)", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Respond (삭제)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "pinData": {},
