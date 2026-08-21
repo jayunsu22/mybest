@@ -215,7 +215,9 @@
           ],
           "schema": []
         },
-        "options": {}
+        "options": {
+          "typecast": true
+        }
       },
       "id": "1da2f530-12e2-49b0-a3e6-8b91cde62069",
       "name": "소분류 수정",
@@ -255,7 +257,9 @@
           "matchingColumns": [],
           "schema": []
         },
-        "options": {}
+        "options": {
+          "typecast": true
+        }
       },
       "id": "97f3e371-aed3-4bad-bfdc-17d53abaece1",
       "name": "소분류 생성",
@@ -375,7 +379,9 @@
           ],
           "schema": []
         },
-        "options": {}
+        "options": {
+          "typecast": true
+        }
       },
       "id": "4000f9a8-2ec7-4aeb-802a-07f51e65847b",
       "name": "항목 수정",
@@ -415,7 +421,9 @@
           "matchingColumns": [],
           "schema": []
         },
-        "options": {}
+        "options": {
+          "typecast": true
+        }
       },
       "id": "7e427203-955c-4ff1-9577-570c5ad5356a",
       "name": "항목 생성",
