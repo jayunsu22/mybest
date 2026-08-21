@@ -1288,25 +1288,25 @@ Expected: 두 명령 모두 `200` 출력. 404가 나오면 Pages 빌드가 아�
 
 **Interfaces:** 없음
 
-- [ ] **Step 1: 배포된 공개 페이지 확인**
+- [x] **Step 1: 배포된 공개 페이지 확인**
 
 `mcp__Claude_Browser__navigate`로 `https://<username>.github.io/my-taste/index.html`을 연다.
 
 Expected: Task 1의 예시 데이터("음악 > 여름노래 BEST5")가 렌더링됨. `mcp__Claude_Browser__read_console_messages`로 콘솔 에러가 없는지 확인.
 
-- [ ] **Step 2: 배포된 관리자 페이지에서 실제 데이터 추가**
+- [x] **Step 2: 배포된 관리자 페이지에서 실제 데이터 추가**
 
 `mcp__Claude_Browser__navigate`로 `https://<username>.github.io/my-taste/admin.html`을 연다. 사용자에게 실제로 기록하고 싶은 첫 BEST5 하나(대분류/소분류명/항목 1~2개)를 물어보고, 브라우저 도구로 폼을 채워 저장한다.
 
 Expected: 토스트 "저장되었습니다" 표시, 목록에 반영됨.
 
-- [ ] **Step 3: 공개 페이지에 반영 확인**
+- [x] **Step 3: 공개 페이지에 반영 확인**
 
 `index.html`을 새로고침한다.
 
 Expected: Step 2에서 추가한 소분류/항목이 보임.
 
-- [ ] **Step 4: Task 1 예시 데이터 정리**
+- [x] **Step 4: Task 1 예시 데이터 정리**
 
 사용자에게 "여름노래 BEST5" 예시 데이터를 이제 지워도 될지 확인하고, 승인하면 admin.html에서 삭제한다.
 
