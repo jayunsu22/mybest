@@ -93,13 +93,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <div class="admin-list-card" data-list-id="${list.id}">
                         <div class="admin-list-header">
                             <strong>${list.소분류명}</strong> (표시순서 ${list.표시순서})
+                            <button type="button" class="btn-add-item" data-list-id="${list.id}">+ 추가</button>
                             <button type="button" class="btn-edit-list" data-id="${list.id}">수정</button>
                             <button type="button" class="btn-delete-list" data-id="${list.id}">삭제</button>
                         </div>
-                        <ul class="admin-item-list">
+                        <ul class="admin-item-list" data-list-id="${list.id}">
                             ${list.항목.length ? list.항목.map(item => `
-                                <li>
-                                    ${item.순위}위 · ${item.제목}
+                                <li class="admin-item-row" data-id="${item.id}">
+                                    <span class="drag-handle" title="드래그해서 순서 변경">⠿</span>
+                                    <span class="item-row-text">${item.순위}위 · ${item.제목}</span>
                                     <button type="button" class="btn-edit-item" data-id="${item.id}" data-list-id="${list.id}">수정</button>
                                     <button type="button" class="btn-delete-item" data-id="${item.id}">삭제</button>
                                 </li>
@@ -109,6 +111,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 `).join('')}
             </section>
         `).join('');
+
+        listContainer.querySelectorAll('.admin-item-list').forEach(ul => {
+            setupDragReorder(ul, ul.dataset.listId);
+        });
     }
 
     function renderAll() {
@@ -135,6 +141,86 @@ document.addEventListener('DOMContentLoaded', async () => {
             renderAll();
         } catch (err) {
             showToast(err.message || '데이터를 불러오지 못했습니다.', 'danger');
+        }
+    }
+
+    // 항목을 손가락(또는 마우스)으로 드래그해서 순서를 바꾸는 기능.
+    // 드래그가 끝나면 그 소분류 안의 항목 순위를 1..N으로 다시 매겨서 바뀐 것만 저장한다.
+    function setupDragReorder(ulEl, listId) {
+        ulEl.querySelectorAll('.admin-item-row').forEach(row => {
+            const handle = row.querySelector('.drag-handle');
+            if (!handle) return;
+
+            handle.addEventListener('pointerdown', (e) => {
+                e.preventDefault();
+                const dragEl = row;
+                dragEl.classList.add('dragging');
+                try { handle.setPointerCapture(e.pointerId); } catch (err) { /* 일부 브라우저는 미지원 */ }
+
+                const onMove = (ev) => {
+                    ev.preventDefault();
+                    const rows = [...ulEl.querySelectorAll('.admin-item-row:not(.dragging)')];
+                    const y = ev.clientY;
+                    const next = rows.find(r => {
+                        const rect = r.getBoundingClientRect();
+                        return y < rect.top + rect.height / 2;
+                    });
+                    if (next) {
+                        ulEl.insertBefore(dragEl, next);
+                    } else {
+                        ulEl.appendChild(dragEl);
+                    }
+                };
+
+                const onUp = async (ev) => {
+                    dragEl.classList.remove('dragging');
+                    try { handle.releasePointerCapture(ev.pointerId); } catch (err) { /* noop */ }
+                    document.removeEventListener('pointermove', onMove);
+                    document.removeEventListener('pointerup', onUp);
+                    await persistNewOrder(ulEl, listId);
+                };
+
+                document.addEventListener('pointermove', onMove, { passive: false });
+                document.addEventListener('pointerup', onUp);
+            });
+        });
+    }
+
+    async function persistNewOrder(ulEl, listId) {
+        const list = findListById(listId);
+        if (!list) return;
+        const rows = [...ulEl.querySelectorAll('.admin-item-row')];
+        const updates = [];
+        rows.forEach((row, idx) => {
+            const itemId = row.dataset.id;
+            const item = list.항목.find(i => i.id === itemId);
+            const newRank = idx + 1;
+            if (item && item.순위 !== newRank) {
+                updates.push({ ...item, 순위: newRank });
+            }
+        });
+        if (updates.length === 0) return;
+        try {
+            for (const item of updates) {
+                const payload = window.AdminUtils.buildItemPayload({
+                    제목: item.제목,
+                    순위: item.순위,
+                    코멘트: item.코멘트,
+                    '이미지/링크': item['이미지/링크'],
+                    소속목록: listId
+                }, item.id);
+                const response = await fetchWithTimeout(API_ITEM_SAVE_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) throw new Error('순위 저장 실패');
+            }
+            showToast('순위가 변경되었습니다.');
+            await refresh();
+        } catch (err) {
+            showToast(err.message || '순위 저장 중 오류가 발생했습니다.', 'danger');
+            await refresh();
         }
     }
 
@@ -192,6 +278,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     listContainer.addEventListener('click', async (e) => {
         const target = e.target;
+
+        if (target.classList.contains('btn-add-item')) {
+            resetItemForm();
+            itemFormListSelect.value = target.dataset.listId;
+            itemForm.scrollIntoView({ behavior: 'smooth' });
+            itemFormTitle.focus();
+        }
 
         if (target.classList.contains('btn-edit-list')) {
             const list = findListById(target.dataset.id);

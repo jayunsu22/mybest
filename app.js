@@ -26,6 +26,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         return div.innerHTML;
     }
 
+    function rankClass(rank) {
+        if (rank === 1) return ' item-rank--gold';
+        if (rank === 2) return ' item-rank--silver';
+        if (rank === 3) return ' item-rank--bronze';
+        return '';
+    }
+
     function renderItemMedia(item) {
         const url = item['이미지/링크'];
         const type = window.TasteUtils.detectMediaType(url);
@@ -47,13 +54,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function renderItem(item) {
+        const media = renderItemMedia(item);
+        const hasDetail = Boolean(item.코멘트) || Boolean(media);
+        const rankCls = rankClass(item.순위);
         return `
-            <li class="item-card">
-                <span class="item-rank">${escapeHtml(item.순위)}</span>
+            <li class="item-card${rankCls ? ' item-card--top' : ''}">
+                <span class="item-rank${rankCls}">${escapeHtml(item.순위)}위</span>
                 <div class="item-body">
-                    <div class="item-title">${escapeHtml(item.제목)}</div>
-                    ${item.코멘트 ? `<div class="item-comment">${escapeHtml(item.코멘트)}</div>` : ''}
-                    ${renderItemMedia(item)}
+                    ${hasDetail
+                        ? `<button type="button" class="item-title item-title--expandable" aria-expanded="false">${escapeHtml(item.제목)}<span class="item-title-chevron">▾</span></button>
+                           <div class="item-detail" hidden>
+                               ${item.코멘트 ? `<div class="item-comment">${escapeHtml(item.코멘트)}</div>` : ''}
+                               ${media}
+                           </div>`
+                        : `<div class="item-title">${escapeHtml(item.제목)}</div>`
+                    }
                 </div>
             </li>`;
     }
@@ -87,6 +102,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         emptyEl.style.display = 'none';
         categoriesEl.innerHTML = categories.map(renderCategory).join('');
     }
+
+    // 제목을 탭하면 코멘트/이미지·링크가 펼쳐지는 아코디언 (이벤트 위임으로 한 번만 등록)
+    categoriesEl.addEventListener('click', (e) => {
+        const btn = e.target.closest('.item-title--expandable');
+        if (!btn) return;
+        const detail = btn.nextElementSibling;
+        if (!detail) return;
+        const isHidden = detail.hasAttribute('hidden');
+        if (isHidden) {
+            detail.removeAttribute('hidden');
+            btn.classList.add('item-title--open');
+            btn.setAttribute('aria-expanded', 'true');
+        } else {
+            detail.setAttribute('hidden', '');
+            btn.classList.remove('item-title--open');
+            btn.setAttribute('aria-expanded', 'false');
+        }
+    });
 
     async function load() {
         loadingEl.style.display = 'block';

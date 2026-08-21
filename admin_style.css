@@ -47,10 +47,20 @@ form textarea { min-height: 60px; resize: vertical; }
 .admin-list-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; margin-bottom: 12px; }
 .admin-list-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .admin-list-header button { padding: 4px 10px; font-size: 0.8rem; border: 1px solid var(--border); border-radius: 6px; background: #fff; cursor: pointer; }
+.btn-add-item { border-color: var(--accent) !important; background: var(--accent) !important; color: #fff; }
 
 .admin-item-list { list-style: none; margin: 10px 0 0; padding: 0; }
 .admin-item-list li { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-top: 1px solid var(--border); font-size: 0.9rem; }
 .admin-item-list button { padding: 2px 8px; font-size: 0.75rem; border: 1px solid var(--border); border-radius: 6px; background: #fff; cursor: pointer; }
+
+.admin-item-row { background: var(--card-bg); }
+.admin-item-row.dragging { opacity: 0.55; background: #eef2f8; border-radius: 6px; }
+.drag-handle {
+    cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none;
+    padding: 2px 8px; font-size: 1.05rem; color: var(--text-muted); flex: 0 0 auto;
+}
+.drag-handle:active { cursor: grabbing; }
+.item-row-text { flex: 1; min-width: 0; }
 
 .toast {
     position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px);
