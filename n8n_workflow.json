@@ -499,28 +499,16 @@
     },
     {
       "parameters": {
-        "operation": "delete",
-        "base": {
-          "__rl": true,
-          "value": "app5irj3oL3S3CRt7",
-          "mode": "list",
-          "cachedResultName": "나의취향",
-          "cachedResultUrl": "https://airtable.com/app5irj3oL3S3CRt7"
-        },
-        "table": {
-          "__rl": true,
-          "value": "tblnGGqnY5UMAl6wm",
-          "mode": "list",
-          "cachedResultName": "취향목록",
-          "cachedResultUrl": "https://airtable.com/app5irj3oL3S3CRt7/tblnGGqnY5UMAl6wm"
-        },
-        "id": "={{ $json.body.id }}",
+        "method": "DELETE",
+        "url": "=https://api.airtable.com/v0/app5irj3oL3S3CRt7/tblnGGqnY5UMAl6wm/{{ $json.body.id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "airtableTokenApi",
         "options": {}
       },
       "id": "67bd2dad-8f9b-41a2-b02e-d09068916ccb",
       "name": "소분류 삭제",
-      "type": "n8n-nodes-base.airtable",
-      "typeVersion": 2.2,
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
       "position": [
         440,
         850
@@ -534,28 +522,16 @@
     },
     {
       "parameters": {
-        "operation": "delete",
-        "base": {
-          "__rl": true,
-          "value": "app5irj3oL3S3CRt7",
-          "mode": "list",
-          "cachedResultName": "나의취향",
-          "cachedResultUrl": "https://airtable.com/app5irj3oL3S3CRt7"
-        },
-        "table": {
-          "__rl": true,
-          "value": "tbl9RrRGX0b1XMdSP",
-          "mode": "list",
-          "cachedResultName": "취향항목",
-          "cachedResultUrl": "https://airtable.com/app5irj3oL3S3CRt7/tbl9RrRGX0b1XMdSP"
-        },
-        "id": "={{ $json.body.id }}",
+        "method": "DELETE",
+        "url": "=https://api.airtable.com/v0/app5irj3oL3S3CRt7/tbl9RrRGX0b1XMdSP/{{ $json.body.id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "airtableTokenApi",
         "options": {}
       },
       "id": "585cd5c3-b683-46e3-b1b7-50a8741656f7",
       "name": "항목 삭제",
-      "type": "n8n-nodes-base.airtable",
-      "typeVersion": 2.2,
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
       "position": [
         440,
         950
