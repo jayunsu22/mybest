@@ -22,6 +22,11 @@ body {
 .page-header { text-align: center; padding: 40px 20px 20px; }
 .page-header h1 { margin: 0 0 8px; font-size: 2rem; }
 .page-subtitle { margin: 0; color: var(--text-muted); }
+.nav-link {
+    display: inline-block; margin-top: 14px; color: var(--accent);
+    text-decoration: none; font-size: 0.9rem; font-weight: 600;
+}
+.nav-link:hover { text-decoration: underline; }
 
 main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 

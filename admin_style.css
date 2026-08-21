@@ -20,6 +20,11 @@ body {
 }
 
 .page-header { padding: 24px 16px; text-align: center; }
+.nav-link {
+    display: inline-block; margin-top: 10px; color: var(--accent);
+    text-decoration: none; font-size: 0.9rem; font-weight: 600;
+}
+.nav-link:hover { text-decoration: underline; }
 main { max-width: 720px; margin: 0 auto; padding: 0 16px 60px; }
 
 .form-section { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 24px; }
