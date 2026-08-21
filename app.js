@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const refreshBtn = document.getElementById('refreshBtn');
 
     let categoriesData = [];
+    let activeCategory = null;
 
     function showToast(message, type = 'success') {
         toastEl.textContent = message;
@@ -100,12 +101,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         return `
             <div class="list-card">
                 <div class="list-title-row">
-                    <h3 class="list-title" data-list-id="${list.id}">
+                    <h3 class="list-title list-title--collapsed" data-list-id="${list.id}">
                         <span class="list-title-chevron">▾</span>${escapeHtml(list.소분류명)}
                     </h3>
                     <button type="button" class="btn-quick-add" data-list-id="${list.id}">+ 추가</button>
                 </div>
-                <div class="list-body">
+                <div class="list-body" hidden>
                     <div class="quick-add-panel" data-list-id="${list.id}" hidden>
                         <input type="text" class="quick-add-title" placeholder="제목을 입력하세요">
                         <div class="quick-add-actions">
@@ -118,15 +119,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             </div>`;
     }
 
-    function renderCategory(category) {
-        const lists = category.소분류목록.map(renderList).join('');
-        return `
-            <section class="category-section">
-                <h2 class="category-title">${escapeHtml(category.대분류)}</h2>
-                <div class="list-grid">${lists}</div>
-            </section>`;
-    }
-
     function render(categories) {
         if (!categories || categories.length === 0) {
             emptyEl.style.display = 'block';
@@ -134,7 +126,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
         emptyEl.style.display = 'none';
-        categoriesEl.innerHTML = categories.map(renderCategory).join('');
+
+        const names = categories.map(c => c.대분류);
+        if (!activeCategory || !names.includes(activeCategory)) {
+            activeCategory = names[0];
+        }
+
+        const tabs = `<div class="category-tabs">${names.map(name => `
+            <button type="button" class="category-tab${name === activeCategory ? ' category-tab--active' : ''}" data-category="${escapeHtml(name)}">${escapeHtml(name)}</button>
+        `).join('')}</div>`;
+
+        const sections = categories.map(category => `
+            <section class="category-section" data-category="${escapeHtml(category.대분류)}"${category.대분류 === activeCategory ? '' : ' hidden'}>
+                <div class="list-grid">${category.소분류목록.map(renderList).join('')}</div>
+            </section>`).join('');
+
+        categoriesEl.innerHTML = tabs + sections;
         categoriesEl.querySelectorAll('.item-list').forEach(ol => {
             setupDragReorder(ol, ol.dataset.listId);
         });
@@ -219,6 +226,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             await load();
         }
     }
+
+    // 대분류 탭 전환
+    categoriesEl.addEventListener('click', (e) => {
+        const tabBtn = e.target.closest('.category-tab');
+        if (!tabBtn) return;
+        activeCategory = tabBtn.dataset.category;
+        render(categoriesData);
+    });
 
     // 소분류 제목을 탭하면 그 소분류 전체(항목 목록)를 접었다 펼쳤다 함
     categoriesEl.addEventListener('click', (e) => {
