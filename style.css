@@ -45,7 +45,13 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 }
 .list-card:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(43, 38, 34, 0.09); }
 .list-title-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
-.list-title { margin: 0; font-size: 1.1rem; }
+.list-title {
+    margin: 0; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; gap: 6px;
+    user-select: none;
+}
+.list-title-chevron { display: inline-block; color: var(--accent); font-size: 0.8rem; transition: transform 0.15s ease; }
+.list-title--collapsed .list-title-chevron { transform: rotate(-90deg); }
+.list-body[hidden] { display: none; }
 .btn-quick-add {
     flex: 0 0 auto; padding: 4px 10px; font-size: 0.8rem; font-weight: 600;
     border: 1px solid var(--accent); border-radius: 999px; background: #fff;

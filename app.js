@@ -99,17 +99,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         return `
             <div class="list-card">
                 <div class="list-title-row">
-                    <h3 class="list-title">${escapeHtml(list.소분류명)}</h3>
+                    <h3 class="list-title" data-list-id="${list.id}">
+                        <span class="list-title-chevron">▾</span>${escapeHtml(list.소분류명)}
+                    </h3>
                     <button type="button" class="btn-quick-add" data-list-id="${list.id}">+ 추가</button>
                 </div>
-                <div class="quick-add-panel" data-list-id="${list.id}" hidden>
-                    <input type="text" class="quick-add-title" placeholder="제목을 입력하세요">
-                    <div class="quick-add-actions">
-                        <button type="button" class="quick-add-save" data-list-id="${list.id}">저장</button>
-                        <button type="button" class="quick-add-cancel">취소</button>
+                <div class="list-body">
+                    <div class="quick-add-panel" data-list-id="${list.id}" hidden>
+                        <input type="text" class="quick-add-title" placeholder="제목을 입력하세요">
+                        <div class="quick-add-actions">
+                            <button type="button" class="quick-add-save" data-list-id="${list.id}">저장</button>
+                            <button type="button" class="quick-add-cancel">취소</button>
+                        </div>
                     </div>
+                    <ol class="item-list" data-list-id="${list.id}">${items}</ol>
                 </div>
-                <ol class="item-list" data-list-id="${list.id}">${items}</ol>
             </div>`;
     }
 
@@ -214,6 +218,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             await load();
         }
     }
+
+    // 소분류 제목을 탭하면 그 소분류 전체(항목 목록)를 접었다 펼쳤다 함
+    categoriesEl.addEventListener('click', (e) => {
+        const listTitle = e.target.closest('.list-title');
+        if (!listTitle) return;
+        const body = listTitle.closest('.list-card').querySelector('.list-body');
+        if (!body) return;
+        const isHidden = body.hasAttribute('hidden');
+        if (isHidden) {
+            body.removeAttribute('hidden');
+            listTitle.classList.remove('list-title--collapsed');
+        } else {
+            body.setAttribute('hidden', '');
+            listTitle.classList.add('list-title--collapsed');
+        }
+    });
 
     // 제목을 탭하면 코멘트/이미지·링크가 펼쳐지는 아코디언, 소분류별 빠른 추가 — 이벤트 위임으로 한 번만 등록
     categoriesEl.addEventListener('click', async (e) => {
