@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const itemFormCancel = document.getElementById('itemFormCancel');
 
     const listContainer = document.getElementById('listContainer');
+    const refreshBtn = document.getElementById('refreshBtn');
 
     function showToast(message, type = 'success') {
         toast.textContent = message;
@@ -351,6 +352,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
     });
+
+    refreshBtn.addEventListener('click', refresh);
 
     await refresh();
 });

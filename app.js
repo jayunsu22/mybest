@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const emptyEl = document.getElementById('emptyState');
     const categoriesEl = document.getElementById('categories');
     const toastEl = document.getElementById('toast');
+    const refreshBtn = document.getElementById('refreshBtn');
 
     let categoriesData = [];
 
@@ -320,6 +321,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             loadingEl.style.display = 'none';
         }
     }
+
+    refreshBtn.addEventListener('click', load);
 
     await load();
 });

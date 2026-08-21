@@ -20,11 +20,13 @@ body {
 }
 
 .page-header { padding: 24px 16px; text-align: center; }
+.nav-row { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 10px; }
 .nav-link {
-    display: inline-block; margin-top: 10px; color: var(--accent);
+    display: inline-block; color: var(--accent);
     text-decoration: none; font-size: 0.9rem; font-weight: 600;
 }
 .nav-link:hover { text-decoration: underline; }
+.nav-button { background: none; border: none; padding: 0; cursor: pointer; font: inherit; }
 main { max-width: 720px; margin: 0 auto; padding: 0 16px 60px; }
 
 .form-section { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 24px; }
