@@ -50,5 +50,41 @@
     return plan;
   }
 
-  return { validateListForm, buildListPayload, validateItemForm, buildItemPayload, buildDeletePlan };
+  // "남자배우" + 5 → "남자배우 BEST5". limit가 없으면 주제만 그대로 쓴다.
+  function buildListTitle(topic, limit) {
+    const base = (topic || '').trim();
+    if (!base) return '';
+    const n = Number(limit);
+    return n > 0 ? `${base} BEST${n}` : base;
+  }
+
+  // "남자배우 BEST5" → 5, 개수가 없으면 null
+  function parseBestLimit(name) {
+    const match = String(name || '').match(/BEST\s*(\d+)/i);
+    return match ? Number(match[1]) : null;
+  }
+
+  // 배열에서 index 위치의 원소를 delta만큼 옮긴 새 배열. 범위를 벗어나면 null.
+  function moveInArray(arr, index, delta) {
+    const target = index + delta;
+    if (index < 0 || index >= arr.length || target < 0 || target >= arr.length) return null;
+    const copy = arr.slice();
+    const [moved] = copy.splice(index, 1);
+    copy.splice(target, 0, moved);
+    return copy;
+  }
+
+  // 주어진 순서대로 field를 1..N으로 다시 매기고, 값이 바뀐 것만 새 값과 함께 돌려준다.
+  function renumber(arr, field) {
+    const changed = [];
+    arr.forEach((entry, idx) => {
+      if (Number(entry[field]) !== idx + 1) changed.push({ ...entry, [field]: idx + 1 });
+    });
+    return changed;
+  }
+
+  return {
+    validateListForm, buildListPayload, validateItemForm, buildItemPayload, buildDeletePlan,
+    buildListTitle, parseBestLimit, moveInArray, renumber
+  };
 });

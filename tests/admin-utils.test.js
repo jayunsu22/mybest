@@ -70,3 +70,29 @@ test('buildDeletePlan handles a list with no items', () => {
   const plan = buildDeletePlan({ id: 'recLIST', 항목: [] });
   assert.deepEqual(plan, [{ type: 'list', id: 'recLIST' }]);
 });
+
+const { buildListTitle, parseBestLimit, moveInArray, renumber } = require('../admin-utils.js');
+
+test('buildListTitle appends BEST N only when a limit is given', () => {
+  assert.equal(buildListTitle(' 남자배우 ', 5), '남자배우 BEST5');
+  assert.equal(buildListTitle('인생영화', 0), '인생영화');
+  assert.equal(buildListTitle('', 5), '');
+});
+
+test('parseBestLimit reads the number after BEST', () => {
+  assert.equal(parseBestLimit('남자배우 BEST5'), 5);
+  assert.equal(parseBestLimit('여름노래 best 10'), 10);
+  assert.equal(parseBestLimit('인생영화'), null);
+});
+
+test('moveInArray moves an element and rejects out-of-range moves', () => {
+  assert.deepEqual(moveInArray(['a', 'b', 'c'], 2, -1), ['a', 'c', 'b']);
+  assert.deepEqual(moveInArray(['a', 'b', 'c'], 0, 2), ['b', 'c', 'a']);
+  assert.equal(moveInArray(['a', 'b'], 0, -1), null);
+  assert.equal(moveInArray(['a', 'b'], 1, 1), null);
+});
+
+test('renumber returns only entries whose field changed', () => {
+  const result = renumber([{ id: 'x', 순위: 2 }, { id: 'y', 순위: 2 }, { id: 'z', 순위: 0 }], '순위');
+  assert.deepEqual(result, [{ id: 'x', 순위: 1 }, { id: 'z', 순위: 3 }]);
+});
