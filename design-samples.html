@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+</head>
+<body>
+<title>나의 BEST 시안</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&family=Gowun+Batang:wght@700&display=swap">
+<style>
+:root {
+  --bg: #faf7f2; --card: #ffffff; --text: #2b2622; --muted: #7a7169; --accent: #c9884f;
+  --accent-soft: #f6eadc; --border: #e8e1d8; --danger: #b8443a; --shade: rgba(43,38,34,.38);
+  --gold: #e3a834; --silver: #a9b2c2; --bronze: #b97a45; --stage: #efe9e0;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #1d1a17; --card: #27231f; --text: #eee7de; --muted: #a79d92; --accent: #dca46f;
+    --accent-soft: #3a2f24; --border: #3b352f; --danger: #e07a6f; --shade: rgba(0,0,0,.55); --stage: #151310;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #1d1a17; --card: #27231f; --text: #eee7de; --muted: #a79d92; --accent: #dca46f;
+  --accent-soft: #3a2f24; --border: #3b352f; --danger: #e07a6f; --shade: rgba(0,0,0,.55); --stage: #151310;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--stage); color: var(--text); margin: 0;
+  font-family: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  padding-inline: 16px; padding-block: 24px 48px; line-height: 1.5;
+}
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.intro { max-width: 760px; margin: 0 auto 20px; }
+.intro h1 { font-family: "Gowun Batang", serif; font-size: 1.7rem; margin: 0 0 6px; text-wrap: balance; }
+.intro p { margin: 0; color: var(--muted); max-width: 62ch; }
+
+.switch { display: flex; gap: 6px; max-width: 760px; margin: 0 auto 18px; flex-wrap: wrap; }
+.switch button {
+  flex: 1 1 150px; text-align: left; padding: 10px 12px; border-radius: 10px;
+  border: 1px solid var(--border); background: var(--bg);
+}
+.switch button b { display: block; font-size: .95rem; }
+.switch button span { font-size: .78rem; color: var(--muted); }
+.switch button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+
+.stage { display: flex; gap: 28px; justify-content: center; align-items: flex-start; flex-wrap: wrap; max-width: 960px; margin: 0 auto; }
+.phone {
+  width: 100%; max-width: 380px; height: 700px; background: var(--bg); border-radius: 28px;
+  border: 1px solid var(--border); overflow: hidden; position: relative;
+  box-shadow: 0 18px 50px rgba(43,38,34,.14); display: flex; flex-direction: column;
+}
+.notes { flex: 1 1 260px; max-width: 360px; }
+.notes h2 { font-family: "Gowun Batang", serif; margin: 0 0 8px; font-size: 1.25rem; }
+.notes ul { margin: 0; padding-left: 18px; color: var(--muted); display: grid; gap: 6px; }
+.notes .fit { margin-top: 14px; padding: 10px 12px; border-radius: 10px; background: var(--accent-soft); font-size: .88rem; }
+
+/* shared in-phone parts */
+.bar { display: flex; align-items: center; gap: 8px; padding: 16px 16px 10px; }
+.bar h3 { margin: 0; font-size: 1.15rem; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.crumb { font-size: .8rem; color: var(--muted); padding: 0 16px; }
+.back { border: none; background: none; color: var(--accent); font-weight: 700; padding: 4px 0; }
+.scroll { flex: 1; overflow-y: auto; padding: 4px 16px 90px; }
+.ghost { border: 1px dashed var(--border); background: none; border-radius: 12px; color: var(--muted); padding: 12px; width: 100%; }
+.pill { border: 1px solid var(--border); background: var(--card); border-radius: 999px; padding: 5px 12px; font-size: .85rem; white-space: nowrap; }
+.pill.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.rank {
+  flex: 0 0 auto; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center;
+  font-size: .8rem; font-weight: 700; background: var(--border); color: var(--text); font-variant-numeric: tabular-nums;
+}
+.rank.r1 { background: var(--gold); color: #3f2a00; }
+.rank.r2 { background: var(--silver); color: #232833; }
+.rank.r3 { background: var(--bronze); color: #fff; }
+.row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--border); }
+.row:first-child { border-top: none; }
+.row .t { flex: 1; min-width: 0; }
+.row .t small { display: block; color: var(--muted); font-size: .78rem; }
+.icon { border: none; background: none; color: var(--muted); padding: 4px 6px; border-radius: 6px; font-size: .95rem; }
+.icon:hover { background: var(--accent-soft); }
+.addrow { display: flex; gap: 8px; margin-top: 10px; }
+.addrow input { flex: 1; min-width: 0; padding: 9px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--card); }
+.addrow button, .primary { border: none; background: var(--accent); color: #fff; border-radius: 10px; padding: 9px 14px; font-weight: 700; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 12px 14px; }
+.fab { position: absolute; right: 16px; bottom: 18px; left: 16px; padding: 14px; border-radius: 14px; font-size: 1rem; box-shadow: 0 8px 20px rgba(201,136,79,.35); }
+.sheet-wrap { position: absolute; inset: 0; background: var(--shade); display: flex; align-items: flex-end; z-index: 5; }
+.sheet { background: var(--bg); width: 100%; border-radius: 20px 20px 0 0; padding: 18px 16px 20px; max-height: 88%; overflow-y: auto; }
+.sheet h4 { margin: 0 0 12px; font-size: 1.05rem; }
+.field { display: grid; gap: 4px; margin-bottom: 12px; font-size: .85rem; color: var(--muted); }
+.field input { padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--card); font-size: 1rem; color: var(--text); }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.actions { display: flex; gap: 8px; margin-top: 6px; }
+.actions .primary { flex: 1; padding: 12px; }
+.secondary { border: 1px solid var(--border); background: var(--card); border-radius: 10px; padding: 12px 14px; }
+.danger { color: var(--danger); }
+.hint { font-size: .78rem; color: var(--muted); }
+.preview { font-family: "Gowun Batang", serif; font-size: 1.2rem; padding: 12px; border-radius: 12px; background: var(--accent-soft); margin-bottom: 12px; }
+.preview small { display: block; font-family: "IBM Plex Sans KR", sans-serif; font-size: .75rem; color: var(--muted); }
+
+/* A */
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.tile { text-align: left; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px 14px; min-height: 104px; display: flex; flex-direction: column; justify-content: space-between; }
+.tile b { font-size: 1.1rem; }
+.tile span { font-size: .8rem; color: var(--muted); }
+.listbtn { width: 100%; display: flex; align-items: center; gap: 10px; text-align: left; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 12px 14px; margin-bottom: 8px; }
+.listbtn .t { flex: 1; min-width: 0; }
+.listbtn small { display: block; color: var(--muted); font-size: .8rem; }
+.count { font-size: .78rem; color: var(--accent); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* B */
+.tabs { display: flex; gap: 6px; overflow-x: auto; padding: 0 16px 10px; }
+.stack { display: grid; gap: 12px; }
+.cardhead { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+.cardhead b { flex: 1; min-width: 0; }
+
+/* C */
+.steps { display: flex; gap: 4px; margin-bottom: 14px; }
+.steps i { flex: 1; height: 4px; border-radius: 2px; background: var(--border); }
+.steps i.on { background: var(--accent); }
+.slot { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.slot input { flex: 1; min-width: 0; padding: 9px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--card); }
+.group h5 { margin: 14px 0 8px; font-size: .8rem; letter-spacing: .06em; color: var(--muted); }
+.mini { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.mini span { font-size: .78rem; color: var(--muted); }
+
+@media (prefers-reduced-motion: no-preference) { .sheet { animation: up .2s ease-out; } }
+@keyframes up { from { transform: translateY(30px); opacity: .6; } }
+</style>
+
+<header class="intro">
+  <h1>나의 BEST 관리 화면 — 3가지 시안</h1>
+  <p>예시 데이터(영화 › 남자배우 BEST5 등)로 실제처럼 눌러볼 수 있어요. 세 시안은 같은 데이터를 공유하니, 한 시안에서 추가한 항목이 다른 시안에도 보입니다.</p>
+</header>
+
+<nav class="switch" id="switch">
+  <button type="button" data-d="A" aria-pressed="true"><b>A. 폴더처럼 들어가기</b><span>대분류 → 리스트 → 순위</span></button>
+  <button type="button" data-d="B" aria-pressed="false"><b>B. 탭 + 카드 한 화면</b><span>공개 페이지와 같은 구조</span></button>
+  <button type="button" data-d="C" aria-pressed="false"><b>C. BEST 빠른 만들기</b><span>3단계로 한 번에 작성</span></button>
+</nav>
+
+<div class="stage">
+  <div class="phone" id="phone"></div>
+  <aside class="notes" id="notes"></aside>
+</div>
+
+<script>
+const data = [
+  { cat: '영화', lists: [
+    { id: 1, name: '남자배우 BEST5', items: [{ t: '송강호', c: '어떤 역이든 설득력' }, { t: '황정민', c: '' }, { t: '이병헌', c: '' }, { t: '최민식', c: '' }, { t: '마동석', c: '' }] },
+    { id: 2, name: '여자배우 BEST5', items: [{ t: '전도연', c: '' }, { t: '김혜수', c: '' }, { t: '김태리', c: '' }] },
+    { id: 3, name: '인생영화 BEST10', items: [{ t: '기생충', c: '' }, { t: '올드보이', c: '' }, { t: '살인의 추억', c: '' }] }
+  ] },
+  { cat: '음악', lists: [
+    { id: 4, name: '여름노래 BEST5', items: [{ t: '여름 안에서', c: '' }, { t: 'Hype Boy', c: '' }] }
+  ] },
+  { cat: '책', lists: [] }
+];
+let nextId = 10;
+const esc = s => String(s).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+const findList = id => { for (const c of data) { const l = c.lists.find(x => x.id === id); if (l) return { c, l }; } };
+const limitOf = name => { const m = name.match(/BEST\s?(\d+)/i); return m ? +m[1] : null; };
+const rank = i => `<span class="rank${i < 3 ? ' r' + (i + 1) : ''}">${i + 1}</span>`;
+
+const phone = document.getElementById('phone');
+const notes = document.getElementById('notes');
+let design = 'A';
+const st = { A: { level: 0, cat: '영화', list: null }, B: { cat: '영화', sheet: null }, C: { sheet: null } };
+
+const NOTES = {
+  A: `<h2>A. 폴더처럼 들어가기</h2><ul>
+    <li>첫 화면은 <b>대분류 타일</b>만. 영화를 누르면 영화 안의 리스트만 보여요.</li>
+    <li>리스트를 누르면 <b>순위 편집 화면</b>. 맨 아래 입력칸에 쓰면 다음 순위로 바로 추가.</li>
+    <li>위쪽 경로(나의 BEST › 영화)로 지금 위치가 항상 보여요.</li>
+    <li>▲▼ 버튼으로 순위 이동, 표시순서 숫자 입력은 없음.</li></ul>
+    <div class="fit">휴대폰에서 한 손으로 쓰기 가장 편한 구조. 화면당 할 일이 하나라 헷갈리지 않아요.</div>`,
+  B: `<h2>B. 탭 + 카드 한 화면</h2><ul>
+    <li>공개 페이지처럼 <b>대분류 탭</b>, 그 아래 리스트 카드가 펼쳐져 있어요.</li>
+    <li>각 카드 아래 입력칸에서 바로 항목 추가.</li>
+    <li>항목을 누르면 아래에서 <b>수정 시트</b>가 올라와 코멘트·링크를 편집.</li>
+    <li>탭 옆 <b>＋</b>로 새 대분류, 카드의 ⋯로 이름 변경·삭제.</li></ul>
+    <div class="fit">전체를 한눈에 보면서 고치기 좋아요. 리스트가 많아지면 스크롤이 길어질 수 있어요.</div>`,
+  C: `<h2>C. BEST 빠른 만들기</h2><ul>
+    <li>큰 버튼 하나로 시작: <b>① 대분류 고르기 → ② 제목 + BEST 개수 → ③ 순위 칸 채우기</b>.</li>
+    <li>"남자배우" + "BEST 5"를 고르면 제목이 자동으로 <b>남자배우 BEST5</b>가 되고, 1~5위 칸이 미리 준비돼요.</li>
+    <li>만든 뒤에는 목록에서 눌러 이어서 수정.</li></ul>
+    <div class="fit">새 BEST를 자주 만든다면 가장 빠름. 이미 있는 리스트를 고칠 때는 A·B보다 한 단계 더 들어가야 해요.</div>`
+};
+
+function render() {
+  document.querySelectorAll('#switch button').forEach(b => b.setAttribute('aria-pressed', b.dataset.d === design));
+  notes.innerHTML = NOTES[design];
+  phone.innerHTML = design === 'A' ? viewA() : design === 'B' ? viewB() : viewC();
+  const auto = phone.querySelector('[data-autofocus]');
+  if (auto) auto.focus({ preventScroll: true });
+}
+
+/* ---------- A ---------- */
+function viewA() {
+  const s = st.A;
+  if (s.level === 0) {
+    return `<div class="bar"><h3>나의 BEST</h3></div>
+      <div class="scroll"><div class="tiles">
+        ${data.map(c => `<button type="button" class="tile" data-a="open-cat" data-cat="${esc(c.cat)}"><b>${esc(c.cat)}</b><span>리스트 ${c.lists.length}개</span></button>`).join('')}
+        <button type="button" class="tile ghost" data-a="new-cat" style="justify-content:center;align-items:center">＋ 대분류 추가</button>
+      </div>
+      ${s.newCat ? `<div class="addrow"><input id="a-newcat" placeholder="예: 드라마" data-autofocus><button type="button" data-a="save-cat">추가</button></div>` : ''}
+      </div>`;
+  }
+  const cat = data.find(c => c.cat === s.cat);
+  if (s.level === 1) {
+    return `<div class="bar"><button type="button" class="back" data-a="up">‹ 나의 BEST</button></div>
+      <div class="bar" style="padding-top:0"><h3>${esc(cat.cat)}</h3></div>
+      <div class="scroll">
+        ${cat.lists.map(l => {
+          const lim = limitOf(l.name);
+          return `<button type="button" class="listbtn" data-a="open-list" data-id="${l.id}">
+            <div class="t"><b>${esc(l.name)}</b><small>${l.items[0] ? '1위 ' + esc(l.items[0].t) : '아직 비어 있어요'}</small></div>
+            <span class="count">${l.items.length}${lim ? '/' + lim : '개'}</span><span aria-hidden="true">›</span></button>`;
+        }).join('') || '<p class="hint">아직 리스트가 없어요.</p>'}
+        <div class="card" style="margin-top:12px">
+          <b style="font-size:.9rem">새 리스트</b>
+          <div class="addrow" style="margin-top:6px"><input id="a-newlist" placeholder="예: 남자배우"></div>
+          <div class="chips" style="margin-top:8px">${[3, 5, 10].map(n => `<button type="button" class="pill" data-a="new-list" data-n="${n}">BEST ${n}</button>`).join('')}<button type="button" class="pill" data-a="new-list" data-n="0">개수 없이</button></div>
+        </div>
+      </div>`;
+  }
+  const { l } = findList(s.list);
+  const lim = limitOf(l.name);
+  return `<div class="bar"><button type="button" class="back" data-a="up">‹ ${esc(cat.cat)}</button></div>
+    <div class="crumb">나의 BEST › ${esc(cat.cat)}</div>
+    <div class="bar" style="padding-top:2px"><h3>${esc(l.name)}</h3><span class="count">${l.items.length}${lim ? '/' + lim : ''}</span></div>
+    <div class="scroll"><div class="card">
+      ${l.items.map((it, i) => `<div class="row">${rank(i)}<div class="t">${esc(it.t)}${it.c ? `<small>${esc(it.c)}</small>` : ''}</div>
+        <button type="button" class="icon" data-a="mv" data-i="${i}" data-d="-1" aria-label="위로">▲</button>
+        <button type="button" class="icon" data-a="mv" data-i="${i}" data-d="1" aria-label="아래로">▼</button>
+        <button type="button" class="icon" data-a="del" data-i="${i}" aria-label="삭제">✕</button></div>`).join('') || '<p class="hint">첫 번째 순위를 적어보세요.</p>'}
+      ${!lim || l.items.length < lim ? `<div class="addrow"><input id="a-item" placeholder="${l.items.length + 1}위 입력" data-autofocus><button type="button" data-a="add-item">추가</button></div>` : `<p class="hint" style="margin:10px 0 0">BEST ${lim} 완성! 🎉</p>`}
+    </div></div>`;
+}
+
+/* ---------- B ---------- */
+function viewB() {
+  const s = st.B;
+  const cat = data.find(c => c.cat === s.cat) || data[0];
+  let sheet = '';
+  if (s.sheet && s.sheet.type === 'item') {
+    const { l } = findList(s.sheet.list); const it = l.items[s.sheet.i];
+    sheet = `<div class="sheet-wrap" data-a="close"><div class="sheet"><h4>${esc(l.name)} · ${s.sheet.i + 1}위</h4>
+      <label class="field">제목<input id="b-t" value="${esc(it.t)}"></label>
+      <label class="field">한줄 코멘트<input id="b-c" value="${esc(it.c)}" placeholder="왜 좋은지 짧게"></label>
+      <label class="field">이미지·유튜브 링크<input id="b-u" placeholder="https://"></label>
+      <div class="actions"><button type="button" class="secondary danger" data-a="b-del">삭제</button><button type="button" class="primary" data-a="b-save">저장</button></div></div></div>`;
+  } else if (s.sheet && s.sheet.type === 'menu') {
+    const { l } = findList(s.sheet.list);
+    sheet = `<div class="sheet-wrap" data-a="close"><div class="sheet"><h4>리스트 설정</h4>
+      <label class="field">리스트 제목<input id="b-name" value="${esc(l.name)}"></label>
+      <div class="actions"><button type="button" class="secondary danger" data-a="b-dellist">리스트 삭제</button><button type="button" class="primary" data-a="b-rename">저장</button></div></div></div>`;
+  } else if (s.sheet && s.sheet.type === 'cat') {
+    sheet = `<div class="sheet-wrap" data-a="close"><div class="sheet"><h4>새 대분류</h4>
+      <label class="field">대분류 이름<input id="b-cat" placeholder="예: 드라마, 맛집, 게임" data-autofocus></label>
+      <div class="actions"><button type="button" class="primary" data-a="b-addcat">만들기</button></div></div></div>`;
+  }
+  return `<div class="bar"><h3>나의 BEST 관리</h3></div>
+    <div class="tabs">${data.map(c => `<button type="button" class="pill${c === cat ? ' on' : ''}" data-a="b-tab" data-cat="${esc(c.cat)}">${esc(c.cat)}</button>`).join('')}
+      <button type="button" class="pill" data-a="b-newcat" aria-label="대분류 추가">＋</button></div>
+    <div class="scroll"><div class="stack">
+      ${cat.lists.map(l => `<div class="card"><div class="cardhead"><b>${esc(l.name)}</b><button type="button" class="icon" data-a="b-menu" data-id="${l.id}" aria-label="리스트 설정">⋯</button></div>
+        ${l.items.map((it, i) => `<div class="row" data-a="b-item" data-id="${l.id}" data-i="${i}" style="cursor:pointer">${rank(i)}<div class="t">${esc(it.t)}${it.c ? `<small>${esc(it.c)}</small>` : ''}</div><span class="hint">›</span></div>`).join('')}
+        <div class="addrow"><input id="b-add-${l.id}" placeholder="${l.items.length + 1}위 추가"><button type="button" data-a="b-add" data-id="${l.id}">＋</button></div></div>`).join('')}
+      <div class="card"><b style="font-size:.9rem">${esc(cat.cat)}에 새 리스트</b>
+        <div class="addrow"><input id="b-newlist" placeholder="예: 남자배우 BEST5"><button type="button" data-a="b-newlist">만들기</button></div></div>
+    </div></div>${sheet}`;
+}
+
+/* ---------- C ---------- */
+function viewC() {
+  const s = st.C;
+  let sheet = '';
+  if (s.sheet) {
+    const w = s.sheet;
+    const title = w.topic ? `${w.topic}${w.n ? ' BEST' + w.n : ''}` : '';
+    const steps = `<div class="steps">${[1, 2, 3].map(k => `<i class="${k <= w.step ? 'on' : ''}"></i>`).join('')}</div>`;
+    let body = '';
+    if (w.step === 1) {
+      body = `<h4>① 어떤 분야인가요?</h4><div class="chips">${data.map(c => `<button type="button" class="pill${w.cat === c.cat ? ' on' : ''}" data-a="c-cat" data-cat="${esc(c.cat)}">${esc(c.cat)}</button>`).join('')}</div>
+        <label class="field" style="margin-top:12px">또는 새 대분류<input id="c-newcat" placeholder="예: 드라마" value="${data.some(c => c.cat === w.cat) ? '' : esc(w.cat || '')}"></label>
+        <div class="actions"><button type="button" class="secondary" data-a="close">취소</button><button type="button" class="primary" data-a="c-next1">다음</button></div>`;
+    } else if (w.step === 2) {
+      body = `<h4>② 무엇의 BEST인가요?</h4>
+        <label class="field">주제<input id="c-topic" value="${esc(w.topic || '')}" placeholder="예: 남자배우" data-autofocus></label>
+        <div class="field">몇 위까지?<div class="chips">${[3, 5, 10].map(n => `<button type="button" class="pill${w.n === n ? ' on' : ''}" data-a="c-n" data-n="${n}">BEST ${n}</button>`).join('')}<button type="button" class="pill${w.n === 0 ? ' on' : ''}" data-a="c-n" data-n="0">제한 없음</button></div></div>
+        <div class="preview"><small>이렇게 저장돼요</small>${esc(w.cat)} · ${esc(title || '제목 미리보기')}</div>
+        <div class="actions"><button type="button" class="secondary" data-a="c-prev">이전</button><button type="button" class="primary" data-a="c-next2">다음</button></div>`;
+    } else {
+      const n = w.n || 5;
+      body = `<h4>③ ${esc(title)} 채우기</h4><p class="hint" style="margin:-6px 0 12px">지금 다 안 채워도 돼요. 나중에 이어서 쓸 수 있어요.</p>
+        ${Array.from({ length: n }, (_, i) => `<div class="slot">${rank(i)}<input id="c-slot-${i}" placeholder="${i + 1}위"${i === 0 ? ' data-autofocus' : ''}></div>`).join('')}
+        <div class="actions"><button type="button" class="secondary" data-a="c-prev">이전</button><button type="button" class="primary" data-a="c-done">완료</button></div>`;
+    }
+    sheet = `<div class="sheet-wrap"><div class="sheet">${steps}${body}</div></div>`;
+  }
+  return `<div class="bar"><h3>나의 BEST</h3></div>
+    <div class="scroll">
+      ${data.filter(c => c.lists.length).map(c => `<div class="group"><h5>${esc(c.cat)}</h5>
+        ${c.lists.map(l => { const lim = limitOf(l.name); return `<div class="card" style="margin-bottom:8px"><div class="cardhead"><b>${esc(l.name)}</b><span class="count">${l.items.length}${lim ? '/' + lim : ''}</span></div>
+          <div class="mini">${l.items.slice(0, 3).map((it, i) => `<span>${i + 1}. ${esc(it.t)}</span>`).join('') || '<span>비어 있음</span>'}</div></div>`; }).join('')}</div>`).join('')}
+    </div>
+    <button type="button" class="primary fab" data-a="c-open">＋ 새 BEST 만들기</button>${sheet}`;
+}
+
+const val = id => (document.getElementById(id) || {}).value?.trim() || '';
+
+phone.addEventListener('click', e => {
+  const el = e.target.closest('[data-a]');
+  if (!el) return;
+  const a = el.dataset.a;
+  if (a === 'close' && e.target !== el) return; // only backdrop closes
+  const A = st.A, B = st.B, C = st.C;
+  switch (a) {
+    case 'open-cat': A.level = 1; A.cat = el.dataset.cat; break;
+    case 'new-cat': A.newCat = true; break;
+    case 'save-cat': { const v = val('a-newcat'); if (!v) return; if (!data.some(c => c.cat === v)) data.push({ cat: v, lists: [] }); A.newCat = false; A.level = 1; A.cat = v; break; }
+    case 'up': A.level--; break;
+    case 'new-list': { const v = val('a-newlist'); if (!v) { document.getElementById('a-newlist').focus(); return; } const n = +el.dataset.n; const l = { id: nextId++, name: n ? `${v} BEST${n}` : v, items: [] }; data.find(c => c.cat === A.cat).lists.push(l); A.level = 2; A.list = l.id; break; }
+    case 'open-list': A.level = 2; A.list = +el.dataset.id; break;
+    case 'add-item': { const v = val('a-item'); if (!v) return; findList(A.list).l.items.push({ t: v, c: '' }); break; }
+    case 'mv': { const it = findList(A.list).l.items; const i = +el.dataset.i, j = i + +el.dataset.d; if (j < 0 || j >= it.length) return; [it[i], it[j]] = [it[j], it[i]]; break; }
+    case 'del': findList(A.list).l.items.splice(+el.dataset.i, 1); break;
+
+    case 'b-tab': B.cat = el.dataset.cat; break;
+    case 'b-newcat': B.sheet = { type: 'cat' }; break;
+    case 'b-addcat': { const v = val('b-cat'); if (!v) return; if (!data.some(c => c.cat === v)) data.push({ cat: v, lists: [] }); B.cat = v; B.sheet = null; break; }
+    case 'b-item': B.sheet = { type: 'item', list: +el.dataset.id, i: +el.dataset.i }; break;
+    case 'b-menu': B.sheet = { type: 'menu', list: +el.dataset.id }; break;
+    case 'b-save': { const it = findList(B.sheet.list).l.items[B.sheet.i]; it.t = val('b-t') || it.t; it.c = val('b-c'); B.sheet = null; break; }
+    case 'b-del': findList(B.sheet.list).l.items.splice(B.sheet.i, 1); B.sheet = null; break;
+    case 'b-rename': { const v = val('b-name'); if (v) findList(B.sheet.list).l.name = v; B.sheet = null; break; }
+    case 'b-dellist': { const { c, l } = findList(B.sheet.list); c.lists.splice(c.lists.indexOf(l), 1); B.sheet = null; break; }
+    case 'b-add': { const id = +el.dataset.id; const v = val('b-add-' + id); if (!v) return; findList(id).l.items.push({ t: v, c: '' }); break; }
+    case 'b-newlist': { const v = val('b-newlist'); if (!v) return; (data.find(c => c.cat === B.cat) || data[0]).lists.push({ id: nextId++, name: v, items: [] }); break; }
+    case 'close': B.sheet = null; C.sheet = null; break;
+
+    case 'c-open': C.sheet = { step: 1, cat: data[0].cat, topic: '', n: 5 }; break;
+    case 'c-cat': C.sheet.cat = el.dataset.cat; break;
+    case 'c-next1': { const v = val('c-newcat'); if (v) C.sheet.cat = v; C.sheet.step = 2; break; }
+    case 'c-n': C.sheet.topic = val('c-topic'); C.sheet.n = +el.dataset.n; break;
+    case 'c-prev': if (C.sheet.step === 2) C.sheet.topic = val('c-topic'); C.sheet.step--; break;
+    case 'c-next2': { C.sheet.topic = val('c-topic'); if (!C.sheet.topic) { document.getElementById('c-topic').focus(); return; } C.sheet.step = 3; break; }
+    case 'c-done': {
+      const w = C.sheet; const n = w.n || 5;
+      const items = Array.from({ length: n }, (_, i) => val('c-slot-' + i)).filter(Boolean).map(t => ({ t, c: '' }));
+      let cat = data.find(c => c.cat === w.cat); if (!cat) { cat = { cat: w.cat, lists: [] }; data.push(cat); }
+      cat.lists.push({ id: nextId++, name: `${w.topic}${w.n ? ' BEST' + w.n : ''}`, items });
+      C.sheet = null; break;
+    }
+    default: return;
+  }
+  render();
+});
+
+phone.addEventListener('keydown', e => {
+  if (e.key !== 'Enter' || e.target.tagName !== 'INPUT' || e.isComposing) return;
+  const btn = e.target.closest('.addrow')?.querySelector('button');
+  if (btn) { e.preventDefault(); btn.click(); }
+});
+
+document.getElementById('switch').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  design = b.dataset.d;
+  try { localStorage.setItem('mybest-design', design); } catch (err) {}
+  render();
+});
+try { const d = localStorage.getItem('mybest-design'); if (d && NOTES[d]) design = d; } catch (err) {}
+render();
+</script>
+</body>
+</html>
